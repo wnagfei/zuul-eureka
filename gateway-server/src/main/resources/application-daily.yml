@@ -1,0 +1,106 @@
+server:
+  port: 50001
+spring:
+  application:
+    name: gateway-server
+  profiles:
+      active: daily
+eureka:
+  client:
+    fetch-registry: true                # 向注册中心注册
+    registry-fetch-interval-seconds: 5  # 服务清单的缓存更新时间，默认30秒一次
+    serviceUrl:
+      defaultZone: http://10.20.1.16:8761/eureka/
+#       defaultZone: http://localhost:8761/eureka/
+#       defaultZone: http://10.20.1.100:8761/eureka/
+  instance:
+    lease-renewal-interval-in-seconds: 5      # 心跳时间，即服务续约间隔时间（缺省为30s）
+    lease-expiration-duration-in-seconds: 10  # 没有心跳的淘汰时间，10秒，即服务续约到期时间（缺省为90s）
+authorization: http://10.20.1.17:8443/cas/oauth2.0/profile?access_token=
+logoutUrl: http://10.20.1.17:8443/cas/logout?service=http://10.20.1.17
+zuul:
+  routes:
+    data:
+      path: /datasrv/**
+      serviceId: bda-dataservice   #数据服务
+    system:
+      path: /system/**
+      serviceId: bda-system
+    program:
+      path: /program/**
+      serviceId: bda-programservice
+    job:
+      path: /job/**
+      serviceId: bda-jobservice
+    project:
+      path: /project/**
+      serviceId: bda-projectservice
+    file:
+      path: /file/**
+      serviceId: bda-fileservice
+    category:
+      path: /category/**
+      serviceId: bda-category
+#    dict:
+#      path: /dict/**
+#      serviceId: bda-programservice
+    log:
+      path: /log/**
+      serviceId: bda-logservice
+    visual:
+      path: /visual/**
+      serviceId: bda-visualservice
+    jx:
+      path: /moodle/**
+      serviceId: bda-sso
+  add-host-header: true
+#  add-proxy-headers: true
+  #prefix: /api/ #为zuul设置一个公共的前缀
+  prefix: /bda/
+  strip-prefix: true
+  host:
+    socket-timeout-millis: 60000
+    connect-timeout-millis: 60000
+#  ignored-headers: Access-Control-Allow-Origin,H-APP-Id,Token,APPToken
+#  ignored-services: *
+  ribbon:
+    eager-load:
+      enabled: true
+    MaxAutoRetries: 2
+    MaxAutoRetriesNextServer: 0
+#  add-host-header: true
+#  sensitive-headers: Access-Control-Allow-Origin
+  ignored-headers: false
+  retryable: true
+ribbon:
+    ReadTimeout: 60000
+    ConnectTimeout: 60000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+#golaxy:
+#    client:
+#      clientId: bda
+#      clientId: 1100661
+#      clientSecret: e65fa828bedf4a0392cf1e005921dab6
+#      accessTokenUri: http://passport.sso.com:8443/cas/oauth2.0/accessToken
+#      userAuthorizationUri: http://passport.sso.com:8443/cas/oauth2.0/authorize?bypass_approval_prompt=true
+#      tokenName: access_token
+#      authenticationScheme: query
+#      clientAuthenticationScheme: form
+#      auto-approve-scopes: '.*'
+#    resource:
+#      userInfoUri: http://passport.sso.com:8443/cas/oauth2.0/profile
+
+
+
+
+
+
+
+
+
